@@ -24,7 +24,7 @@ final class HomeViewUITests: XCTestCase {
         app = nil
     }
     
-    //Tests that the HomeView shows the list of foods when the network successfully fetches the meals
+    /// Tests that the HomeView shows the list of foods when the network successfully fetches the meals
     func testHomeViewShowsFoodsWhenNetworkSuccessful() {
         
         let mealList = app.descendants(matching: .any)["mealsList"]
@@ -39,7 +39,7 @@ final class HomeViewUITests: XCTestCase {
         XCTAssertTrue(mealDetailsView.exists)
     }
     
-    //Tests that the HomeView properly shows the error when the network fails to fetch the meals
+    /// Tests that the HomeView properly shows the error when the network fails to fetch the meals
     func testHomeViewShowsErrorWhenNetworkFails() {
         app.terminate()
         app.launchEnvironment = ["-networking-success":"0"]

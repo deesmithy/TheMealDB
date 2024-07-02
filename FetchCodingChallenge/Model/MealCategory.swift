@@ -7,6 +7,7 @@
 
 import Foundation
 
+///This is a meal category enum that is used to filter the meals that are fetched from the API. This was outside of the provided spec, but made the UX a little bit better to give them access to more meals.
 enum MealCategory: String, CaseIterable {
     case beef = "Beef"
     case breakfast = "Breakfast"

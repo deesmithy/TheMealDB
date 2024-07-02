@@ -9,9 +9,5 @@ import Foundation
 
 struct MealsResponse: Codable {
     var meals: [Meal]
-    
-    
-    
-    
-    
+
 }

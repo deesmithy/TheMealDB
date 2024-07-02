@@ -20,7 +20,7 @@ final class HomeViewViewModelTest: XCTestCase {
         mealsService = nil
     }
     
-    //Test the HomeView ViewModel's getMeals() function correctly fetches and sets its meals property.
+    /// Test the HomeView ViewModel's getMeals() function correctly fetches and sets its meals property.
     func testFetchMeals() async {
         let viewModel = HomeView.ViewModel(mealsService: mealsService)
         XCTAssertEqual([FetchCodingChallenge.Meal](), viewModel.meals, "The HomeView ViewModel meals array should start out empty.")
@@ -33,7 +33,7 @@ final class HomeViewViewModelTest: XCTestCase {
             }
         }
         viewModel.getMeals()
-        wait(for: [expectation], timeout: 3)
+        await fulfillment(of: [expectation], timeout: 3)
         XCTAssertEqual(MockMealsService.mealsFromJSONData(data: try Data(contentsOf: Bundle.main.url(forResource: "Meals", withExtension: "json")!)), viewModel.meals)
     }
 

@@ -9,6 +9,7 @@ import Foundation
 
 
 extension String {
+    /// A string extension that removes all whitespace from a string. 
     func removingWhiteSpaces() -> String {
         return String(self.filter { !" \n\t\r".contains($0) })
     }

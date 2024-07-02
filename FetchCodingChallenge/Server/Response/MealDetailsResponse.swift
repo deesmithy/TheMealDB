@@ -7,7 +7,7 @@
 
 import Foundation
 
-class MealDetailsResponse: Codable {
+struct MealDetailsResponse: Codable {
     var meals: [MealDetails]
     
 }

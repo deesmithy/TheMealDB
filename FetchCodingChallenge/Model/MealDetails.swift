@@ -18,14 +18,18 @@ struct MealDetails: Codable {
     var thumbnailURL: String?
     var tags: String?
     var youtubeURL: String?
+    
+    /// A list of ingredients for the meal. This list is created by filtering out any empty strings from the provided ingredients
     var ingredients: [String] {
         return [ingredient1, ingredient2, ingredient3, ingredient4, ingredient5, ingredient6, ingredient7, ingredient8, ingredient9, ingredient10, ingredient11, ingredient12, ingredient13, ingredient14, ingredient15, ingredient16, ingredient17, ingredient18, ingredient19, ingredient20].compactMap { $0 }.filter { !$0.isEmpty }
     }
     
+    /// A list of measures for the meal. This list is created by filtering out any empty strings from the provided measures
     var measures: [String] {
         return [measure1, measure2, measure3, measure4, measure5, measure6, measure7, measure8, measure9, measure10, measure11, measure12, measure13, measure14, measure15, measure16, measure17, measure18, measure19, measure20].compactMap { $0 }.filter { !$0.isEmpty }
     }
     
+    ///The names of the properties in the JSON response are different from the names of the properties in the struct. This enum helps to map the JSON keys to the struct properties.
     private enum CodingKeys: String, CodingKey {
         case id = "idMeal"
         case name = "strMeal"
@@ -78,6 +82,7 @@ struct MealDetails: Codable {
         case measure20 = "strMeasure20"
     }
     
+    ///This initializer is used to decode the JSON response from the API. It replaces optional values with nil if they are nil. This assumes that the name and Id are never nil, and will fail if either is nil.
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -184,6 +189,7 @@ struct MealDetails: Codable {
         try container.encode(measure20, forKey: .measure20)
     }
     
+    ///These properties are used to store the ingredients and measures for the meal. They are optional because the API response may not include all 20 ingredients and measures. They are private because the ingredients and measures are accessed through the calculated ingredients and measures properties.
     private var ingredient1: String?
     private var ingredient2: String?
     private var ingredient3: String?

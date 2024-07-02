@@ -20,18 +20,19 @@ struct Meal: Codable {
         self.id = id
     }
     
+    ///The names of the properties in the JSON response are different from the names of the properties in the struct. This enum helps to map the JSON keys to the struct properties.
     private enum CodingKeys: String, CodingKey {
         case name = "strMeal"
         case thumbnail = "strMealThumb"
         case id = "idMeal"
     }
     
-    
+    ///This initializer is used to decode the JSON response from the API. It replaces optional values with empty strings if they are nil.
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = (try? container.decodeIfPresent(String.self, forKey: .name)) ?? ""
         thumbnailURL = (try? container.decodeIfPresent(String.self, forKey: .thumbnail)) ?? ""
-        id = (try? container.decode(String.self, forKey: .id)) ?? "\(Int.random(in: 0...10000))" //TODO: Fix this
+        id = (try? container.decode(String.self, forKey: .id)) ?? ""
     }
 
     func encode(to encoder: any Encoder) throws {
@@ -45,7 +46,7 @@ struct Meal: Codable {
 
 extension Meal: Comparable {
     static func < (lhs: Meal, rhs: Meal) -> Bool {
-        return lhs.name ?? "a" < rhs.name ?? "b"
+        return lhs.name < rhs.name
     }
 }
 

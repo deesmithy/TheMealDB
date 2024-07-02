@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreHaptics
 
 struct HomeView: View {
     @StateObject var viewModel: ViewModel
@@ -13,14 +14,12 @@ struct HomeView: View {
     init() {
         #if DEBUG
         if UITestingHelper.isUITesting {
-
             _viewModel = StateObject(wrappedValue: ViewModel(mealsService: MockMealsService()))
         } else {
             _viewModel = StateObject(wrappedValue: ViewModel())
         }
         #else
         _viewModel = StateObject(wrappedValue: ViewModel())
-        
         #endif
     }
     
@@ -50,7 +49,7 @@ struct HomeView: View {
                             Text(String(letter))
                                 .font(.caption2)
                                 .fontWeight(.bold)
-                                .padding(.horizontal)
+                                .padding(.horizontal, 6)
                                 .padding(.vertical, 4)
                                 .background(.ultraThinMaterial)
                                 .clipShape(Capsule())
@@ -62,20 +61,16 @@ struct HomeView: View {
                             Rectangle().fill(Color(.systemBackground).opacity(0.02))
                                 .gesture(
                                     DragGesture(minimumDistance: 0).onChanged({ gesture in
-                                        
                                         scrollProxy.scrollTo(viewModel.mealIdFor(gesture: gesture, geo: geo), anchor: .top)
                                         
                                     }).onEnded({ gesture in
-                                        
                                         scrollProxy.scrollTo(viewModel.mealIdFor(gesture: gesture, geo: geo), anchor: .top)
                                         
                                     })
-                                )
-                        }
-                    )
-                    
+                                )//: gesture
+                        }//: GeometryReader
+                    )//: overlay
                 }//: overlay
-                
             }//: ScrollViewReader
             
             .toolbar {
@@ -111,6 +106,9 @@ struct HomeView: View {
         .onAppear {
             viewModel.getMeals()
         }//: onAppear
+        .onChange(of: viewModel.currentLetterScrolledTo) {
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        }
     }//: body
 }//: HomeView
 
@@ -119,16 +117,24 @@ struct HomeView: View {
 
 extension HomeView {
     class ViewModel: ObservableObject {
+        /// The meals that are currently being displayed
         @Published var meals: [Meal] = []
+        
+        /// The category of meals that are currently being displayed
         @Published var category: MealCategory = .dessert
+        
+        /// This is a variable that tracks the first letters of the meals. This is used to create the side menu with only letters that are actually correspond to a meal in the list
         @Published var firstLetters: [Character] = []
         
+        /// This is a variable that tracks whether the meals have been loaded. This is used to show an error message if the meals fail to load.
         @Published var hasLoaded: Bool = false
+        
+        /// This is a letter that tracks the most recent position of the scroll on the side menu. This is used to give haptic feedback when the user scrolls to a new letter.
+        @Published var currentLetterScrolledTo: Character = "A"
         
         let mealsService: MealsService
         
         init(mealsService: MealsService = MealsServiceImpl()) {
-            
             self.mealsService = mealsService
         }
         
@@ -144,6 +150,7 @@ extension HomeView {
             }
         }
         
+        /// This function returns the id of the meal that is alphabetically first for the given letter. This is used for the scrolling side menu.
         func idForLetter(_ letter: Character) -> String {
             guard let meal = meals.first(where: { $0.name.first == letter }) else {
                 return ""
@@ -151,18 +158,23 @@ extension HomeView {
             return meal.id
         }
         
+        /// This function returns the letter that corresponds to the given drag fraction. This is used for the scrolling side menu.
         func letterForDragFraction(_ dragFraction: CGFloat) -> Character {
             var index = Int(dragFraction * CGFloat(firstLetters.count))
             index = max(min(index, firstLetters.count - 1), 0)
             return firstLetters[index]
         }
         
+        /// This function returns the meal id for the given drag gesture and geometry proxy. This is used for the scrolling side menu.
         func mealIdFor(gesture: DragGesture.Value, geo: GeometryProxy) -> String {
             let topOfStack = geo.frame(in: .local).minY
             let yLocation = gesture.location.y
             let height = geo.frame(in: .global).height
             let dragFraction = (yLocation - topOfStack) / height
             let letter = letterForDragFraction(abs(dragFraction))
+            Task { await MainActor.run {
+                currentLetterScrolledTo = letter
+            }}
             return idForLetter(letter)
         }
     }

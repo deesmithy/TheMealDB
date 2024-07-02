@@ -32,9 +32,6 @@ struct MealListItemView: View {
                 .padding()
         }//: HStack
         
-        
-        
-        
     }
 }
 

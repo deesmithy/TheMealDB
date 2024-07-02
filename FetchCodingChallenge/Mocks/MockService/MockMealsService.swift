@@ -4,9 +4,11 @@
 //
 //  Created by Donovan Smith on 7/2/24.
 //
+
 #if DEBUG
 import Foundation
 
+/// This is a class used for the few test cases that I did provide. Those test cases are only examples and are deliberately not a full test suite.
 class MockMealsService: MealsService {
     
     init(networkSucceeds: Bool = UITestingHelper.isNetworkingSuccess) {
