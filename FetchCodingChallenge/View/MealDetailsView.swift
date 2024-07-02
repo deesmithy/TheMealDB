@@ -84,7 +84,7 @@ struct MealDetailsView: View {
                                 .padding(8)
                                 .frame(maxWidth: .infinity)
                                 .background(selectedScreen == .ingredients ? Color.green : Color.clear)
-                                .foregroundColor(selectedScreen == .ingredients ? Color.white : Color.black)
+                                .foregroundColor(selectedScreen == .ingredients ? Color(.systemBackground) : Color(.label))
                         })
                         
                         Button(action: {
@@ -96,7 +96,7 @@ struct MealDetailsView: View {
                                 .padding(8)
                                 .frame(maxWidth: .infinity)
                                 .background(selectedScreen == .instructions ? Color.green : Color.clear)
-                                .foregroundColor(selectedScreen == .instructions ? Color.white : Color.black)
+                                .foregroundColor(selectedScreen == .instructions ? Color(.systemBackground) : Color(.label))
                         })
                     }//: HStack
                     
@@ -164,7 +164,7 @@ struct MealDetailsView: View {
                             .frame(width: 25, height: 25)
                             .padding(8)
                             .background(Circle().fill(Color(.systemBackground).opacity(1-navBarOpacity)))
-                            .foregroundStyle(.black)
+                            .foregroundStyle(Color(.label))
                     })
                 }
             }//: if let videoURL
@@ -178,7 +178,7 @@ struct MealDetailsView: View {
                         .frame(width: 25, height: 25)
                         .padding(8)
                         .background(Circle().fill(Color(.systemBackground).opacity(1-navBarOpacity)))
-                        .foregroundStyle(.black)
+                        .foregroundStyle(Color(.label))
                 })
             }
         }//: toolbar

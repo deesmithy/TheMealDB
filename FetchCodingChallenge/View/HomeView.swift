@@ -89,7 +89,7 @@ struct HomeView: View {
                     }, label: {
                         Image(systemName: "line.horizontal.3.decrease.circle")
                             .font(.title3)
-                            .foregroundColor(.black)
+                            .foregroundColor(Color(.label))
                     })
                     
                 } //: ToolbarItem
